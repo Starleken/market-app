@@ -1,0 +1,97 @@
+<databaseChangeLog xmlns="http://www.liquibase.org/xml/ns/dbchangelog"
+                   xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+                   xsi:schemaLocation="http://www.liquibase.org/xml/ns/dbchangelog
+                                       http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-3.4.xsd">
+
+    <changeSet id="1.0.0" author="Starleken">
+        <sql>
+            create table units
+            (
+                id   serial
+                    constraint units_pk
+                        primary key,
+                name varchar(255) not null
+            );
+
+            create table users
+            (
+                id         serial
+                    constraint users_pk
+                        primary key,
+                email      varchar(255) not null,
+                password   varchar(255) not null,
+                lastname   varchar(255) not null,
+                name       varchar(255) not null,
+                patronymic varchar(255)
+            );
+
+            create table organizations
+            (
+                id          serial
+                    constraint organizations_pk
+                        primary key,
+                name        varchar(255) not null,
+                phone       varchar(11)  not null,
+                description varchar(255)
+            );
+
+            create table organization_users
+            (
+                id              serial
+                    constraint organization_users_pk
+                        primary key,
+                id_organization bigint       not null
+                    constraint organization_users_organizations_id_fk
+                        references organizations (id),
+                id_user         bigint       not null
+                    constraint organization_users_users_id_fk
+                        references users (id),
+                role            varchar(255) not null
+            );
+
+            create table chats
+            (
+                id               serial
+                    constraint chats_pk
+                        primary key,
+                id_organization1 bigint not null
+                    constraint chats_organizations_id_fk
+                        references organizations (id),
+                id_organization2 bigint not null
+                    constraint chats_organizations_id_fk2
+                        references organizations (id)
+            );
+
+            create table messages
+            (
+                id        serial
+                    constraint messages_pk
+                        primary key,
+                id_sender bigint       not null
+                    constraint messages_organizations_id_fk
+                        references organizations (id),
+                id_chat   bigint       not null
+                    constraint messages_chats_id_fk
+                        references chats (id),
+                message   varchar(255) not null
+            );
+
+            create table products
+            (
+                id              serial
+                    constraint products_pk
+                        primary key,
+                id_organization bigint       not null
+                    constraint products_organizations_id_fk
+                        references organizations (id),
+                name            varchar(255) not null,
+                description     varchar(255),
+                price           money        not null,
+                id_unit         bigint       not null
+                    constraint products_units_id_fk
+                        references units (id)
+            );
+        </sql>
+    </changeSet>
+
+</databaseChangeLog>

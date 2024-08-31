@@ -1,0 +1,13 @@
+spring:
+  application:
+    name: main-service
+
+  datasource:
+    driver-class-name: org.postgresql.Driver
+    username: postgres
+    password: 1111
+    url: jdbc:postgresql://localhost:5432/market
+
+  liquibase:
+    enabled: true
+    change-log: classpath:db/master.xml
